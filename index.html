@@ -60,7 +60,7 @@
                 <p class="mt-4 text-lg text-gray-700">CRUNCHLY — quick bites, big smiles. Stack it. Snack it. Crunch it.
                 </p>
                 <div class="mt-6 flex gap-3">
-                    <a href="#shop"
+                    <a href="#products"
                         class="px-5 py-3 rounded-lg bg-rose-600 text-white font-semibold shadow hover:scale-105 transition-transform">Shop
                         Now</a>
                     <a href="#about"
@@ -79,6 +79,7 @@
         <div class="max-w-6xl mx-auto px-6">
             <h2 class="text-3xl font-bold text-gray-800 mb-6" data-aos="zoom-in">Our Products</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
                 <!-- The Burger -->
                 <div class="bg-white shadow-lg rounded-2xl p-6 transform hover:-translate-y-2 transition"
                     data-aos="fade-up">
@@ -89,7 +90,15 @@
                         patty, sauce, water</p>
                     <div class="mt-4 flex justify-between items-center">
                         <span class="font-bold text-rose-600">$4.99</span>
-                        <button onclick="addToCart('The Burger', 4.99)"
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeProductQty('burger', -1)"
+                                class="px-2 py-1 bg-gray-200 rounded">-</button>
+                            <input type="number" id="qty-burger" value="1" min="1"
+                                class="w-16 border rounded text-center">
+                            <button onclick="changeProductQty('burger', 1)"
+                                class="px-2 py-1 bg-gray-200 rounded">+</button>
+                        </div>
+                        <button onclick="addToCart('The Burger', 4.99, document.getElementById('qty-burger').value)"
                             class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm">Add</button>
                     </div>
                 </div>
@@ -104,10 +113,19 @@
                         candies, chips, ice cream, water</p>
                     <div class="mt-4 flex justify-between items-center">
                         <span class="font-bold text-rose-600">$2.49</span>
-                        <button onclick="addToCart('Snackin', 2.49)"
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeProductQty('snackin', -1)"
+                                class="px-2 py-1 bg-gray-200 rounded">-</button>
+                            <input type="number" id="qty-snackin" value="1" min="1"
+                                class="w-16 border rounded text-center">
+                            <button onclick="changeProductQty('snackin', 1)"
+                                class="px-2 py-1 bg-gray-200 rounded">+</button>
+                        </div>
+                        <button onclick="addToCart('Snackin', 2.49, document.getElementById('qty-snackin').value)"
                             class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm">Add</button>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -199,19 +217,59 @@
 
         let cart = [];
 
-        function addToCart(name, price) {
-            cart.push({ name, price });
+        function changeProductQty(id, delta) {
+            const input = document.getElementById(`qty-${id}`);
+            let value = parseInt(input.value) + delta;
+            if (value < 1) value = 1;
+            input.value = value;
+        }
+
+        function addToCart(name, price, qty = 1) {
+            qty = parseInt(qty);
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.quantity += qty;
+            } else {
+                cart.push({ name, price, quantity: qty });
+            }
             renderCart();
         }
+
+        function updateQuantity(name, newQty) {
+            const item = cart.find(i => i.name === name);
+            if (!item) return;
+            if (newQty < 1) {
+                cart = cart.filter(i => i.name !== name);
+            } else {
+                item.quantity = parseInt(newQty);
+            }
+            renderCart();
+        }
+
         function renderCart() {
             const cartItems = document.getElementById("cart-items");
             const cartTotal = document.getElementById("cart-total");
             cartItems.innerHTML = "";
             let total = 0;
+
             cart.forEach((item) => {
-                total += item.price;
-                cartItems.innerHTML += `<li>${item.name} - $${item.price.toFixed(2)}</li>`;
+                total += item.price * item.quantity;
+                cartItems.innerHTML += `
+                    <li class="flex justify-between items-center">
+                        <span>${item.name} - $${item.price.toFixed(2)}</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="updateQuantity('${item.name}', ${item.quantity - 1})"
+                                class="px-2 py-1 bg-gray-200 rounded">-</button>
+                            <input type="number" min="1" value="${item.quantity}"
+                                onchange="updateQuantity('${item.name}', this.value)"
+                                class="w-16 border rounded text-center">
+                            <button onclick="updateQuantity('${item.name}', ${item.quantity + 1})"
+                                class="px-2 py-1 bg-gray-200 rounded">+</button>
+                        </div>
+                    </li>
+                `;
             });
+
             cartTotal.innerText = total.toFixed(2);
         }
 
