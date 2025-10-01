@@ -16,7 +16,9 @@
     <!-- Mobile/desktop stylesheet loader -->
     <script>
         function isMobileDevice() {
-            return /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase());
+            return /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+                navigator.userAgent.toLowerCase()
+            );
         }
         const link = document.createElement("link");
         link.rel = "stylesheet";
@@ -38,15 +40,14 @@
     <header class="fixed top-0 left-0 w-full bg-gradient-to-r from-rose-500 via-yellow-400 to-rose-500 shadow z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-2">
             <h1 class="text-2xl font-extrabold text-white">
-                <img src="LOGO.png" alt="Crunchly Logo" class="w-28 h-28 object-contain">
+                <img src="LOGO.png" alt="Crunchly Logo" class="w-24 h-24 object-contain">
             </h1>
             <nav class="hidden md:flex gap-6 text-sm font-medium">
-                <a href="#home" class="text-white hover:text-yellow-200 transition-colors">Home</a>
-                <a href="#products" class="text-white hover:text-yellow-200 transition-colors">Products</a>
-                <a href="#shop" class="text-white hover:text-yellow-200 transition-colors">Shop</a>
-                <a href="#checkout" class="text-white hover:text-yellow-200 transition-colors">Checkout</a>
-                <a href="#about" class="text-white hover:text-yellow-200 transition-colors">About</a>
-                <a href="#contact" class="text-white hover:text-yellow-200 transition-colors">Contact</a>
+                <a href="#home" class="text-white hover:text-yellow-200">Home</a>
+                <a href="#products" class="text-white hover:text-yellow-200">Products</a>
+                <a href="#checkout" class="text-white hover:text-yellow-200">Checkout</a>
+                <a href="#about" class="text-white hover:text-yellow-200">About</a>
+                <a href="#contact" class="text-white hover:text-yellow-200">Contact</a>
             </nav>
         </div>
     </header>
@@ -79,7 +80,7 @@
             <h2 class="text-3xl font-bold text-gray-800 mb-6" data-aos="zoom-in">Our Products</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- The Burger -->
-                <div class="bg-white shadow-lg rounded-2xl p-6 transform hover:-translate-y-2 transition duration-300"
+                <div class="bg-white shadow-lg rounded-2xl p-6 transform hover:-translate-y-2 transition"
                     data-aos="fade-up">
                     <img src="THE BURGER.png" alt="The Burger" class="w-full h-48 object-contain">
                     <h3 class="mt-4 text-xl font-bold">The Burger</h3>
@@ -89,12 +90,12 @@
                     <div class="mt-4 flex justify-between items-center">
                         <span class="font-bold text-rose-600">$4.99</span>
                         <button onclick="addToCart('The Burger', 4.99)"
-                            class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm">Add to Cart</button>
+                            class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm">Add</button>
                     </div>
                 </div>
 
                 <!-- Snackin -->
-                <div class="bg-white shadow-lg rounded-2xl p-6 transform hover:-translate-y-2 transition duration-300"
+                <div class="bg-white shadow-lg rounded-2xl p-6 transform hover:-translate-y-2 transition"
                     data-aos="fade-up">
                     <img src="Title.png" alt="Snackin" class="w-full h-48 object-contain">
                     <h3 class="mt-4 text-xl font-bold">Snackin</h3>
@@ -104,8 +105,43 @@
                     <div class="mt-4 flex justify-between items-center">
                         <span class="font-bold text-rose-600">$2.49</span>
                         <button onclick="addToCart('Snackin', 2.49)"
-                            class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm">Add to Cart</button>
+                            class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm">Add</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout -->
+    <section id="checkout" class="py-16 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-rose-600 mb-6 text-center">Checkout</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Cart -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-semibold mb-4">Your Cart</h3>
+                    <ul id="cart-items" class="space-y-2"></ul>
+                    <p class="mt-4 font-bold">Total: $<span id="cart-total">0.00</span></p>
+                </div>
+                <!-- Checkout Form -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <form id="checkout-form" class="grid gap-4">
+                        <input type="text" placeholder="Full Name" class="border rounded-lg px-4 py-2 w-full" required>
+                        <input type="email" placeholder="Email" class="border rounded-lg px-4 py-2 w-full" required>
+                        <select id="payment" class="border rounded-lg px-4 py-2 w-full" onchange="toggleCardFields()">
+                            <option>Cash on Delivery</option>
+                            <option>Card Payment</option>
+                        </select>
+                        <div id="card-fields" class="hidden">
+                            <input id="card-number" type="text" placeholder="Card Number" maxlength="16"
+                                class="border rounded-lg px-4 py-2 w-full">
+                            <input id="cvv" type="text" placeholder="CVV" maxlength="3"
+                                class="border rounded-lg px-4 py-2 w-24">
+                        </div>
+                        <button type="submit" class="px-5 py-3 bg-rose-600 text-white rounded-lg">Place Order</button>
+                        <p id="order-message" class="hidden text-green-600 font-semibold"></p>
+                        <p id="error-message" class="hidden text-red-600 font-semibold">❌ Invalid card details</p>
+                    </form>
                 </div>
             </div>
         </div>
@@ -114,38 +150,31 @@
     <!-- About -->
     <section id="about" class="py-16 bg-yellow-50">
         <div class="max-w-6xl mx-auto px-6">
-            <h2 class="text-3xl font-bold text-rose-600 mb-6" data-aos="zoom-in">About Us</h2>
-            <p class="text-gray-700 mb-4" data-aos="fade-up">
-                Crunchly is your go-to snack destination! We bring you quick bites, sweet treats, and the joy of
-                snacking.
-            </p>
-            <p class="text-gray-700" data-aos="fade-up" data-aos-delay="100">
-                Snack smarter, crunch harder, and enjoy every bite. Perfect for everyone who loves fun, tasty snacks.
-            </p>
+            <h2 class="text-3xl font-bold text-rose-600 mb-6">About Us</h2>
+            <p class="text-gray-700 mb-4">Crunchly is your go-to snack destination! We bring you quick bites, sweet
+                treats, and joy of snacking.</p>
         </div>
     </section>
 
     <!-- Contact -->
     <section id="contact" class="py-16 bg-white">
         <div class="max-w-6xl mx-auto px-6">
-            <h2 class="text-3xl font-bold text-rose-600 mb-6 text-center" data-aos="zoom-in">Contact Us</h2>
+            <h2 class="text-3xl font-bold text-rose-600 mb-6 text-center">Contact Us</h2>
             <div class="grid md:grid-cols-2 gap-8">
-                <div data-aos="fade-right">
-                    <p class="text-gray-700 mb-4">Have questions or feedback? Reach out to us and we’ll get back to you
-                        as soon as possible.</p>
+                <div>
+                    <p class="text-gray-700 mb-4">Reach out to us anytime.</p>
                     <ul class="text-gray-700 space-y-2">
-                        <li><span class="font-semibold">Email:</span> support@crunchly.com</li>
-                        <li><span class="font-semibold">Phone:</span> +1 (555) 123-4567</li>
-                        <li><span class="font-semibold">Address:</span> 123 Crunchly Lane, Snacktown, USA</li>
+                        <li><b>Email:</b> support@crunchly.com</li>
+                        <li><b>Phone:</b> +1 (555) 123-4567</li>
                     </ul>
                 </div>
-                <div data-aos="fade-left">
+                <div>
                     <form class="grid gap-4 bg-white p-6 rounded-lg shadow">
                         <input type="text" placeholder="Full Name" class="border rounded-lg px-4 py-2 w-full" required>
                         <input type="email" placeholder="Email" class="border rounded-lg px-4 py-2 w-full" required>
                         <textarea placeholder="Message" rows="4" class="border rounded-lg px-4 py-2 w-full"
                             required></textarea>
-                        <button type="submit" class="px-5 py-3 bg-rose-600 text-white rounded-lg">Send Message</button>
+                        <button type="submit" class="px-5 py-3 bg-rose-600 text-white rounded-lg">Send</button>
                     </form>
                 </div>
             </div>
@@ -158,14 +187,61 @@
     </footer>
 
     <script>
-        // Intro overlay logic
-        window.addEventListener('load', () => {
+        // Intro overlay
+        window.addEventListener("load", () => {
             setTimeout(() => {
-                const intro = document.getElementById('intro');
-                intro.classList.add('transition-opacity', 'duration-1000');
+                const intro = document.getElementById("intro");
+                intro.classList.add("transition-opacity", "duration-1000");
                 intro.style.opacity = 0;
                 setTimeout(() => intro.remove(), 1000);
             }, 3000);
+        });
+
+        let cart = [];
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            renderCart();
+        }
+        function renderCart() {
+            const cartItems = document.getElementById("cart-items");
+            const cartTotal = document.getElementById("cart-total");
+            cartItems.innerHTML = "";
+            let total = 0;
+            cart.forEach((item) => {
+                total += item.price;
+                cartItems.innerHTML += `<li>${item.name} - $${item.price.toFixed(2)}</li>`;
+            });
+            cartTotal.innerText = total.toFixed(2);
+        }
+
+        function toggleCardFields() {
+            const paymentMethod = document.getElementById("payment").value;
+            const cardFields = document.getElementById("card-fields");
+            cardFields.classList.toggle("hidden", paymentMethod !== "Card Payment");
+        }
+
+        document.getElementById("checkout-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            const payment = document.getElementById("payment").value;
+            if (payment === "Card Payment") {
+                const card = document.getElementById("card-number").value;
+                const cvv = document.getElementById("cvv").value;
+                if (card.length !== 16 || isNaN(card) || cvv.length !== 3 || isNaN(cvv)) {
+                    document.getElementById("error-message").classList.remove("hidden");
+                    return;
+                }
+            }
+            document.getElementById("order-message").classList.remove("hidden");
+            document.getElementById("order-message").innerText = "✅ Order Confirmed!";
+            cart = [];
+            renderCart();
+            this.reset();
+            toggleCardFields();
         });
 
         AOS.init({ duration: 800, once: true });
